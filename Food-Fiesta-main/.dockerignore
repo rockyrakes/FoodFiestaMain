@@ -1,7 +1,0 @@
-target/
-.git/
-.vscode/
-.idea/
-*.log
-Dockerfile
-.dockerignore

@@ -1,0 +1,31 @@
+# Render.com Deployment for Food Fiesta Royal
+# Root Directory: Food-Fiesta-main (subfolder containing the Spring Boot project)
+
+services:
+  - type: web
+    name: food-fiesta-royal
+    env: java
+    plan: free
+    rootDir: Food-Fiesta-main
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    healthCheckPath: /home
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:h2:file:./data/foodfiesta;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      - key: SPRING_DATASOURCE_DRIVER
+        value: org.h2.Driver
+      - key: SPRING_DATASOURCE_USERNAME
+        value: sa
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ""
+      - key: SPRING_JPA_PLATFORM
+        value: org.hibernate.dialect.H2Dialect
+      - key: JAVA_OPTS
+        value: "-Xmx256m -Xms128m"
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
