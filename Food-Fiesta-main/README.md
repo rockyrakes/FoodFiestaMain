@@ -1,12 +1,8 @@
-# Food Fiesta - Spring Boot Fullstack Project
+# Food Fiesta 🍽️ - Royal Restaurant Management System
 
-**Food Fiesta** is a Spring Boot fullstack dining management application built with **Java 21**, **Spring Boot 3.4.2**, **Thymeleaf**, **Spring Security**, **Spring Data JPA**, and **H2** for quick local development.
+**Food Fiesta** is a premium fullstack restaurant management application built with **Java 21**, **Spring Boot 3.4.2**, **Thymeleaf**, **Spring Security**, **Spring Data JPA**, and **H2** for quick local development. The project features a dual-interface system for customers and administrators with comprehensive CRUD operations and analytics.
 
-The project can also be configured to use PostgreSQL for deployment or production-style testing.
-
-## Project Tags
-
-`#SpringBoot` `#Java21` `#RestAPI` `#BackendProject` `#H2Database` `#PostgreSQL` `#Thymeleaf` `#FullstackProject`
+Live Demo: [http://localhost:8081](http://localhost:8081) | Admin: `admin@foodfiesta.com` / `admin123`
 
 ---
 
@@ -14,85 +10,64 @@ The project can also be configured to use PostgreSQL for deployment or productio
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![H2](https://img.shields.io/badge/Database-H2-blue.svg)](https://www.h2database.com/)
 [![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203-85EA2D.svg)](https://swagger.io/)
+[![Thymeleaf](https://img.shields.io/badge/Template-Thymeleaf-005F0F.svg)](https://www.thymeleaf.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## Interface Preview
+## 🚀 Features
 
-### Home Page
+### 👑 Admin Dashboard
+- **Overview Dashboard** - Revenue stats, order volume, items sold, registered customers, and staff counts
+- **Product Popularity Analytics** - Best seller tracking with sales metrics per dish
+- **Customer Order Summary** - Per-user spending, order counts, and VIP/Gold/Regular tier badges
+- **Menu Management** - Full CRUD (Add/Edit/Delete) for dishes with search filtering
+- **Order Transactions** - Complete order lifecycle with status tracking (Pending → Preparing → Completed/Cancelled)
+- **Customer Accounts** - User management with full CRUD operations
+- **Admin Management** - Staff account creation and permissions management
+- **CSV Export** - One-click export of orders table to CSV
+- **Live Search** - Real-time table filtering across all sections
 
-<p align="center">
-  <img src="./screenshot/home.png" width="800" alt="Home Page">
-</p>
+### 👤 Customer Portal
+- **User Registration & Login** - Self-registration and secure authentication
+- **Product Browsing** - Browse royal menu with dish categories and descriptions
+- **Order Placement** - Select dishes, set quantities, and place orders
+- **Order History** - View past orders with dates and amounts
+- **Multi-Select Checkout** - Select multiple orders and checkout with grand total calculation
+- **Order Success Screen** - Confirmation with total amount and confetti animation
 
-### About Page
-
-<p align="center">
-  <img src="./screenshot/about.png" width="800" alt="About Page">
-</p>
-
-### Authentication & Security
-
-<p align="center">
-  <img src="./screenshot/login.png" width="45%" alt="Dual Login System">
-  <img src="./screenshot/register.png" width="45%" alt="User Registration">
-</p>
-
-### Products
-
-<p align="center">
-  <img src="./screenshot/products.png" width="800" alt="Products Page">
-</p>
-
-### User Experience & Dashboard
-
-<p align="center">
-  <img src="./screenshot/userLogin.png" width="800" alt="User Personalized Dashboard">
-</p>
-
-### Admin Management Console
-
-<p align="center">
-  <img src="./screenshot/admin-services.png" width="800" alt="Admin Dashboard Overview">
-</p>
-
-### API Documentation
-
-<p align="center">
-  <img src="./screenshot/swagger-ui-index-html.png" width="800" alt="Swagger OpenAPI Docs">
-</p>
+### 🔐 Security
+- **Session-based Authentication** - Custom `SessionAuthenticationFilter` for admin and user sessions
+- **Role-based Access** - Separate admin and customer login portals
+- **Optional Google OAuth2** - Pre-configured Google login integration
 
 ---
 
-## Core Features
+## 📸 Screenshots
 
-- Premium Thymeleaf UI with modern CSS and JavaScript.
-- Role-based admin and customer flows.
-- Product inventory management.
-- User registration and login.
-- Order placement and order history.
-- Spring Data JPA persistence.
-- H2 database for fast local startup.
-- Swagger/OpenAPI documentation.
-- Optional Google OAuth2 login configuration.
+| Home Page | Admin Dashboard |
+|:---------:|:--------------:|
+| ![Home](./screenshot/home.png) | ![Admin](./screenshot/admin-services.png) |
+| **Products** | **User Login** |
+| ![Products](./screenshot/products.png) | ![User Login](./screenshot/userLogin.png) |
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 | Layer | Technology |
 | :--- | :--- |
-| Backend | Java 21, Spring Boot 3.4.2, Spring Security, Hibernate |
-| Database | H2 for local development, PostgreSQL optional |
-| Documentation | SpringDoc OpenAPI / Swagger UI |
-| Frontend | Thymeleaf, CSS, JavaScript |
-| Build Tool | Maven Wrapper |
-| API Testing | Swagger, Postman |
+| **Backend** | Java 21, Spring Boot 3.4.2, Spring Security, Spring Data JPA, Hibernate |
+| **Database** | H2 (file-based for dev), PostgreSQL (production-ready) |
+| **Frontend** | Thymeleaf, HTML5, CSS3 (custom design system), Vanilla JavaScript |
+| **Styling** | Premium design system with CSS custom properties, glassmorphism, gold accents |
+| **Build Tool** | Apache Maven (with wrapper) |
+| **API Docs** | SpringDoc OpenAPI / Swagger UI |
+| **Auth** | Session-based + Google OAuth2 (optional) |
 
 ---
 
-## Database Architecture
+## 📊 Database Schema
 
 ```mermaid
 erDiagram
@@ -124,124 +99,84 @@ erDiagram
         int oQuantity
         date orderDate
         double totalAmmout
+        string orderStatus
         int user_u_id FK
     }
 ```
 
 ---
 
-## Prerequisites
+## 🚦 Quick Start
 
-- JDK 21
-- Maven is optional because the Maven wrapper is included
+### Prerequisites
+- JDK 21+
+- Git
 
-Docker and PostgreSQL are only needed if you choose the PostgreSQL/Docker setup.
-
----
-
-## Quick Start With H2
-
-Clone the project:
+### Run Locally
 
 ```bash
-git clone https://github.com/imrajeevnayan/Food-Fiesta.git
-cd Food-Fiesta
-```
+# Clone the repository
+git clone https://github.com/rockyrakes/FoodFiestaMain.git
+cd FoodFiestaMain
 
-Run the application:
-
-```bash
-./mvnw spring-boot:run
-```
-
-On Windows PowerShell:
-
-```powershell
+# Run with Maven Wrapper
 .\mvnw.cmd spring-boot:run
 ```
 
-If `JAVA_HOME` is not set on Windows, set it before running Maven:
+### Access the Application
 
-```powershell
-$env:JAVA_HOME="C:\Program Files\Java\jdk-21.0.11"
-.\mvnw.cmd spring-boot:run
-```
+| URL | Description |
+|:---|:---|
+| http://localhost:8081/ | Home Page |
+| http://localhost:8081/login | Admin & User Login |
+| http://localhost:8081/admin/services | **Admin Dashboard** |
+| http://localhost:8081/swagger-ui/index.html | Swagger API Docs |
+| http://localhost:8081/h2-console | H2 Database Console |
 
-Open the app:
+### Default Login Credentials
 
-- Frontend: [http://localhost:8080/](http://localhost:8080/)
-- Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-- H2 Console: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-
-H2 console connection:
-
-```text
-JDBC URL: jdbc:h2:mem:foodfiesta
-User Name: sa
-Password:
-```
-
-The H2 database is in-memory, so data resets when the application stops.
+| Role | Email | Password |
+|:---|:---|:---|
+| **Admin** | admin@foodfiesta.com | admin123 |
+| **User** | Register via /register or ask admin to create |
 
 ---
 
-## Default Seeded Data
+## 📋 Admin Dashboard Sections
 
-The app seeds sample products and a default admin account on startup.
+The admin panel at `/admin/services` contains:
 
-```text
-Admin email: admin@foodfiesta.com
-Admin password: admin123
-```
+1. **📊 Stats Overview** - 7 stat cards: Revenue, Avg Order Value, Menu Items, Items Sold, Orders, Customers, Admins
+2. **🔥 Product Popularity** - Sales per dish with Best Seller / Popular / Standard badges
+3. **👥 Customer Order Summary** - Per-user analytics with Royal VIP / Gold / Regular tiers
+4. **🍽️ Menu Management** - Full product CRUD with live search
+5. **📄 Order Transactions** - Complete order management with status badges and CSV export
+6. **👤 Customer Accounts** - User CRUD management
+7. **🛡️ Administrators** - Admin CRUD management
 
 ---
 
-## Current Local Database Configuration
+## 🔧 Configuration
 
-The default `src/main/resources/application.properties` uses H2:
+### Application Properties (`src/main/resources/application.properties`)
 
 ```properties
-spring.datasource.url=jdbc:h2:mem:foodfiesta
-spring.datasource.driver-class-name=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=
+server.port=8081
+spring.datasource.url=jdbc:h2:file:./data/foodfiesta
+spring.jpa.hibernate.ddl-auto=update
 spring.h2.console.enabled=true
-spring.h2.console.path=/h2-console
-spring.jpa.hibernate.ddl-auto=create-drop
 ```
 
----
-
-## Optional PostgreSQL Configuration
-
-To use PostgreSQL instead of H2, update `src/main/resources/application.properties`:
-
+### PostgreSQL (Production)
+Edit `application.properties`:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/foodfiesta
 spring.datasource.username=postgres
 spring.datasource.password=YOUR_PASSWORD
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
 ```
 
-PostgreSQL should be running on port `5432`, and the `foodfiesta` database should exist.
-
----
-
-## Optional Google OAuth2
-
-To enable Google login:
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/).
-2. Create an OAuth 2.0 Client ID.
-3. Add this authorized redirect URI:
-
-```text
-http://localhost:8080/login/oauth2/code/google
-```
-
-4. Update `src/main/resources/application.properties`:
-
+### Google OAuth2
 ```properties
 spring.security.oauth2.client.registration.google.client-id=YOUR_CLIENT_ID
 spring.security.oauth2.client.registration.google.client-secret=YOUR_CLIENT_SECRET
@@ -249,52 +184,71 @@ spring.security.oauth2.client.registration.google.client-secret=YOUR_CLIENT_SECR
 
 ---
 
-## Docker Deployment
-
-Build the image:
+## 🐳 Docker Deployment
 
 ```bash
+# Build image
 docker build -t food-fiesta .
-```
 
-Run with Docker:
+# Run container
+docker run -p 8081:8081 --name food-fiesta-app food-fiesta
 
-```bash
-docker run -p 8080:8080 --name food-fiesta-app food-fiesta
-```
-
-Run app and PostgreSQL together:
-
-```bash
+# Or with Docker Compose (includes PostgreSQL)
 docker compose up -d
 ```
 
-Follow logs:
-
-```bash
-docker compose logs -f app
-```
-
 ---
 
-## Build
+## 📦 Build
 
 ```bash
-./mvnw clean package
-```
-
-On Windows:
-
-```powershell
+# Clean build
 .\mvnw.cmd clean package
+
+# Run tests
+.\mvnw.cmd test
 ```
 
 ---
 
-## License
+## 📁 Project Structure
+
+```
+Food-Fiesta-main/
+├── src/main/
+│   ├── java/com/example/demo/
+│   │   ├── config/          # Security, OpenAPI, DataLoader
+│   │   ├── controllers/     # Admin, User, Product, Order, Home
+│   │   ├── entities/        # Admin, User, Product, Orders
+│   │   ├── repositories/    # JPA Repositories
+│   │   ├── services/        # Business logic layer
+│   │   ├── loginCredentials/# Login DTOs
+│   │   └── count/           # Utility (Logic.java)
+│   └── resources/
+│       ├── static/
+│       │   ├── css/          # Main.css, Admin_Page.css, etc.
+│       │   ├── JavaScript/   # Client-side scripts
+│       │   └── Images/       # UI images & food photos
+│       └── templates/        # Thymeleaf HTML templates
+├── Dockerfile
+├── docker-compose.yml
+└── pom.xml
+```
+
+---
+
+## 📄 License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-Developed by **imrajeevnayan**
+## 👨‍💻 Author
+
+**rockyrakes**
+
+[![GitHub](https://img.shields.io/badge/GitHub-rockyrakes-181717?logo=github)](https://github.com/rockyrakes)
+
+---
+
+> *"Where every meal is a royal feast"* 👑🍛
