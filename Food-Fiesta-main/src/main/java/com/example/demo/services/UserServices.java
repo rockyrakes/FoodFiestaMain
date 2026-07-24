@@ -25,19 +25,25 @@ public class UserServices
 	public User getUser(int id)
 	{
 		Optional<User> optional = this.userRepository.findById(id);
-		User user = optional.get();
-		return user;
+		return optional.orElse(null);
 	}
 	public User getUserByEmail(String email)
 	{
-	 User user=	this.userRepository.findUserByUemail(email);
-	 return user;
+		User user = this.userRepository.findUserByUemail(email);
+		return user;
 	}
 
-	public void updateUser(User user,int id)
+	public void updateUser(User user, int id)
 	{
 		user.setU_id(id);
-		 this.userRepository.save(user);
+		Optional<User> existingOpt = this.userRepository.findById(id);
+		if (existingOpt.isPresent()) {
+			User existingUser = existingOpt.get();
+			if (user.getUpassword() == null || user.getUpassword().trim().isEmpty()) {
+				user.setUpassword(existingUser.getUpassword());
+			}
+		}
+		this.userRepository.save(user);
 	}
 
 	public void deleteUser(int id)

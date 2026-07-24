@@ -28,19 +28,16 @@ public class ProductServices
 	public Product getProduct(int id)
 	{
 		Optional<Product> optional = this.productRepository.findById(id);
-		Product product=optional.get();
-		return product;
+		return optional.orElse(null);
 	}
 
-	public void updateproduct(Product p,int id)
+	public void updateproduct(Product p, int id)
 	{
 		p.setPid(id);
 		Optional<Product> optional = this.productRepository.findById(id);
-		Product prod=optional.get();
-
-		if(prod.getPid()==id)
+		if (optional.isPresent())
 		{
-			this.productRepository.save(p);				
+			this.productRepository.save(p);
 		}
 	}
 	public void deleteProduct(int id)

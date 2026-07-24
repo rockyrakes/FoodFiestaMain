@@ -82,7 +82,8 @@ public class DataLoader {
                 System.out.println("Sample products data seeded into database.");
             }
 
-            if (adminRepository.count() == 0) {
+            Admin existingAdmin = adminRepository.findByAdminEmail("admin@foodfiesta.com");
+            if (existingAdmin == null) {
                 Admin defaultAdmin = new Admin();
                 defaultAdmin.setAdminName("Super Admin");
                 defaultAdmin.setAdminEmail("admin@foodfiesta.com");
@@ -90,6 +91,8 @@ public class DataLoader {
                 defaultAdmin.setAdminNumber("9876543210");
                 adminRepository.save(defaultAdmin);
                 System.out.println("✅ Default Admin created: admin@foodfiesta.com / admin123");
+            } else {
+                System.out.println("✅ Default Admin already exists: admin@foodfiesta.com");
             }
         };
     }

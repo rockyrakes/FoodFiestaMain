@@ -1,88 +1,339 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Services | Food Fiesta</title>
+    <title>Admin Console | Food Fiesta Royal</title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
     <link rel="stylesheet" th:href="@{/css/Admin_Page.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-
 <body>
-    <!-- Sidebar -->
     <aside class="admin-sidebar">
-        <a href="/home" class="nav-logo" style="margin-bottom: 48px;">
-            <i class="fa-solid fa-fire-burner"></i> Food Fiesta
-        </a>
-        
+        <a href="/home" class="nav-logo"><i class="fa-solid fa-crown"></i> Food Fiesta</a>
         <nav style="flex: 1;">
             <a href="#stats" class="sidebar-link active"><i class="fa-solid fa-chart-line"></i> Overview</a>
-            <a href="#admins" class="sidebar-link"><i class="fa-solid fa-shield-halved"></i> Administrators</a>
-            <a href="#users" class="sidebar-link"><i class="fa-solid fa-users"></i> User Accounts</a>
+            <a href="#product-summary" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Product Popularity</a>
+            <a href="#user-orders-summary" class="sidebar-link"><i class="fa-solid fa-user-tag"></i> Food Ordered by User</a>
             <a href="#products" class="sidebar-link"><i class="fa-solid fa-utensils"></i> Menu Items</a>
-            <a href="#orders" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Order History</a>
+            <a href="#orders" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Order Transactions</a>
+            <a href="#users" class="sidebar-link"><i class="fa-solid fa-users"></i> Customer Accounts</a>
+            <a href="#admins" class="sidebar-link"><i class="fa-solid fa-shield-halved"></i> Administrators</a>
         </nav>
-
-        <div style="border-top: 1px solid var(--outline); padding-top: 24px;">
-            <a href="/logout" class="sidebar-link" style="color: #ef4444;">
+        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px;">
+            <a href="/logout" class="sidebar-link" style="color: #fca5a5;">
                 <i class="fa-solid fa-right-from-bracket"></i> Sign Out
             </a>
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="admin-main">
-        <header class="admin-header">
+        <header class="admin-header reveal">
             <div>
-                <h1 style="font-size: 2rem;">Admin Console</h1>
-                <p style="color: var(--on-surface-variant);">Management and resource monitoring</p>
+                <h1>Royal Admin Console</h1>
+                <p style="color: var(--on-surface-variant);">Management, product analytics, and customer order summary</p>
             </div>
             <div style="display: flex; gap: 12px;">
-                <a th:href="@{/home}" class="btn btn-outline">Preview Site</a>
-                <a th:href="@{/addAdmin}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Admin</a>
+                <a th:href="@{/home}" class="btn btn-outline"><i class="fa-solid fa-eye"></i> Preview Site</a>
+                <a th:href="@{/addProduct}" class="btn btn-gold"><i class="fa-solid fa-plus"></i> New Dish</a>
+                <a th:href="@{/addAdmin}" class="btn btn-outline"><i class="fa-solid fa-user-shield"></i> New Admin</a>
             </div>
         </header>
 
-        <!-- Stats Overview -->
-        <section id="stats" class="stats-grid animate-up">
+        <!-- Stats Overview Cards -->
+        <section id="stats" class="stats-grid reveal" style="transition-delay: 0.1s;">
             <div class="stat-card">
-                <i class="fa-solid fa-users"></i>
-                <span class="stat-value" th:text="${users.size()}">0</span>
-                <span class="stat-label">Total Users</span>
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <span class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 2, 'POINT')}">₹0.00</span>
+                <span class="stat-label">Total Revenue Earned</span>
+                <span class="stat-sub" th:if="${orders.size() > 0}">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> Active earnings stream</span>
+                </span>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-calculator"></i>
+                <span class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(avgOrderValue, 1, 'COMMA', 2, 'POINT')}">₹0.00</span>
+                <span class="stat-label">Average Order Value</span>
+                <span class="stat-sub" th:if="${orders.size() > 0}">
+                    <span class="trend-neutral"><i class="fa-solid fa-chart-simple"></i> Per transaction avg</span>
+                </span>
             </div>
             <div class="stat-card">
                 <i class="fa-solid fa-utensils"></i>
                 <span class="stat-value" th:text="${products.size()}">0</span>
-                <span class="stat-label">Menu Items</span>
+                <span class="stat-label">Active Menu Dishes</span>
+                <span class="stat-sub" th:if="${products.size() > 0}">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> Ready to serve</span>
+                </span>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-box-open"></i>
+                <span class="stat-value" th:text="${totalItemsSold}">0</span>
+                <span class="stat-label">Total Food Items Sold</span>
+                <span class="stat-sub" th:if="${totalItemsSold > 0}">
+                    <span class="trend-up"><i class="fa-solid fa-fire"></i> Items delivered</span>
+                </span>
             </div>
             <div class="stat-card">
                 <i class="fa-solid fa-receipt"></i>
                 <span class="stat-value" th:text="${orders.size()}">0</span>
-                <span class="stat-label">Total Orders</span>
+                <span class="stat-label">Total Orders Placed</span>
+                <span class="stat-sub" th:if="${orders.size() > 0}">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> Order volume</span>
+                </span>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-users"></i>
+                <span class="stat-value" th:text="${users.size()}">0</span>
+                <span class="stat-label">Registered Customers</span>
+                <span class="stat-sub" th:if="${users.size() > 0}">
+                    <span class="trend-up"><i class="fa-solid fa-user-plus"></i> Growing base</span>
+                </span>
             </div>
             <div class="stat-card">
                 <i class="fa-solid fa-shield-halved"></i>
                 <span class="stat-value" th:text="${admins.size()}">0</span>
-                <span class="stat-label">Staff Accounts</span>
+                <span class="stat-label">Staff Administrators</span>
+                <span class="stat-sub" th:if="${admins.size() > 0}">
+                    <span class="trend-neutral"><i class="fa-solid fa-users-gear"></i> Management team</span>
+                </span>
+            </div>
+        </section>
+
+        <!-- Product Sales & Popularity Summary Section -->
+        <section id="product-summary" class="data-section reveal" style="transition-delay: 0.15s;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-chart-pie" style="color: var(--gold);"></i> Products Summary & Dish Sales</h2>
+                <input type="text" id="searchProductsSummary" class="table-search-input" placeholder="Search dish..." onkeyup="filterTable('searchProductsSummary', 'productSummaryTable')">
+            </div>
+            <div class="table-container">
+                <table class="admin-table" id="productSummaryTable">
+                    <thead>
+                        <tr>
+                            <th>Dish Name</th>
+                            <th>Total Times Ordered</th>
+                            <th>Units Sold</th>
+                            <th>Total Revenue</th>
+                            <th>Avg Price</th>
+                            <th>Status Badge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pSum : ${productSummary}">
+                            <td style="font-weight: 700; font-size: 0.95rem;" th:text="${pSum[0]}">Dish Name</td>
+                            <td><span class="badge badge-info" th:text="${pSum[1]} + ' Orders'">0 Orders</span></td>
+                            <td><span class="stat-value" style="font-size: 1.1rem;" th:text="${pSum[2]}">0</span></td>
+                            <td style="color: var(--gold-dark); font-weight: 800; font-size: 1.05rem;" th:text="'₹' + ${#numbers.formatDecimal(pSum[3], 1, 'COMMA', 2, 'POINT')}">₹0.00</td>
+                            <td th:text="'₹' + ${#numbers.formatDecimal(pSum[4], 1, 'COMMA', 2, 'POINT')}">₹0.00</td>
+                            <td>
+                                <span th:if="${pSum[1] > 3}" class="badge badge-success"><i class="fa-solid fa-fire"></i> Best Seller</span>
+                                <span th:if="${pSum[1] <= 3 and pSum[1] > 1}" class="badge badge-warning"><i class="fa-solid fa-star"></i> Popular</span>
+                                <span th:if="${pSum[1] <= 1}" class="badge badge-neutral"><i class="fa-solid fa-bowl-food"></i> Standard</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(productSummary)}">
+                            <td colspan="6" style="text-align: center; color: var(--on-surface-variant); padding: 30px;">No product sales data recorded yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Detailed Food Ordered by User Summary Section -->
+        <section id="user-orders-summary" class="data-section reveal" style="transition-delay: 0.2s;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-user-tag" style="color: var(--gold);"></i> Food Ordered by Customers Summary</h2>
+                <input type="text" id="searchUserOrders" class="table-search-input" placeholder="Search customer..." onkeyup="filterTable('searchUserOrders', 'userOrdersSummaryTable')">
+            </div>
+            <div class="table-container">
+                <table class="admin-table" id="userOrdersSummaryTable">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Email Address</th>
+                            <th>Orders Count</th>
+                            <th>Total Quantity</th>
+                            <th>Total Spend</th>
+                            <th>Customer Tier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="uSum : ${userOrdersSummary}">
+                            <td th:text="${uSum[0]}">1</td>
+                            <td style="font-weight: 700;" th:text="${uSum[1]}">User Name</td>
+                            <td style="color: var(--on-surface-variant);" th:text="${uSum[2]}">user@example.com</td>
+                            <td><span class="badge badge-info" th:text="${uSum[3]} + ' Orders'">0 Orders</span></td>
+                            <td style="font-weight: 700;" th:text="${uSum[4]} + ' items'">0 items</td>
+                            <td style="color: var(--gold-dark); font-weight: 800;" th:text="'₹' + ${#numbers.formatDecimal(uSum[5], 1, 'COMMA', 2, 'POINT')}">₹0.00</td>
+                            <td>
+                                <span th:if="${uSum[5] >= 1000}" class="badge badge-vip"><i class="fa-solid fa-crown"></i> Royal VIP</span>
+                                <span th:if="${uSum[5] < 1000 and uSum[5] >= 300}" class="badge badge-gold"><i class="fa-solid fa-award"></i> Gold Customer</span>
+                                <span th:if="${uSum[5] < 300}" class="badge badge-neutral"><i class="fa-solid fa-user"></i> Regular</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(userOrdersSummary)}">
+                            <td colspan="7" style="text-align: center; color: var(--on-surface-variant); padding: 30px;">No customer order activity recorded yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Menu Management (Products CRUD) -->
+        <section id="products" class="data-section reveal" style="transition-delay: 0.25s;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-utensils" style="color: var(--gold);"></i> Menu Management (Products)</h2>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <input type="text" id="searchMenuTable" class="table-search-input" placeholder="Search menu dish..." onkeyup="filterTable('searchMenuTable', 'menuTable')">
+                    <a th:href="@{/addProduct}" class="btn btn-gold" style="padding: 8px 16px; font-size: 0.85rem;"><i class="fa-solid fa-plus"></i> Add Dish</a>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="admin-table" id="menuTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Dish Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <td th:text="${product.pid}">1</td>
+                            <td style="font-weight: 700;" th:text="${product.pname}">Dish</td>
+                            <td style="max-width: 320px; color: var(--on-surface-variant); font-size: 0.8rem;" th:text="${product.pdescription != null ? product.pdescription : 'Royal signature dish'}">Description</td>
+                            <td style="color: var(--gold-dark); font-weight: 800;" th:text="'₹' + ${#numbers.formatDecimal(product.pprice, 1, 'COMMA', 2, 'POINT')}">₹300.00</td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <a th:href="@{'/updateProduct/'+${product.pid}}" class="action-btn" style="color: #2563eb; background: #eff6ff;" title="Edit Product"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a th:href="@{'/deleteProduct/'+${product.pid}}" onclick="return confirm('Are you sure you want to delete this dish from menu?');" class="action-btn" style="color: #dc2626; background: #fef2f2;" title="Delete Product"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(products)}">
+                            <td colspan="5" style="text-align: center; color: var(--on-surface-variant); padding: 30px;">No dishes currently available in menu.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Order Transactions Section -->
+        <section id="orders" class="data-section reveal" style="transition-delay: 0.3s;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-receipt" style="color: var(--gold);"></i> Order Transactions</h2>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <input type="text" id="searchOrdersTable" class="table-search-input" placeholder="Search transactions..." onkeyup="filterTable('searchOrdersTable', 'ordersTable')">
+                    <button onclick="exportTableToCSV('ordersTable')" class="btn btn-export" title="Export to CSV"><i class="fa-solid fa-download"></i> Export</button>
+                    <a th:href="@{/addOrder}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.85rem;"><i class="fa-solid fa-plus"></i> Add Order</a>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="admin-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Dish Ordered</th>
+                            <th>Qty</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td style="font-weight: 700;" th:text="'#' + ${order.oId}">#101</td>
+                            <td>
+                                <div style="font-weight: 700;" th:text="${order.user != null ? order.user.uname : 'Guest'}">User</div>
+                                <div style="font-size: 0.75rem; color: var(--on-surface-variant);" th:text="${order.user != null ? order.user.uemail : 'N/A'}">Email</div>
+                            </td>
+                            <td th:text="${order.oName}">Dish</td>
+                            <td th:text="${order.oQuantity}">1</td>
+                            <td style="color: var(--gold-dark); font-weight: 800;" th:text="'₹' + ${#numbers.formatDecimal(order.totalAmmout, 1, 'COMMA', 2, 'POINT')}">₹300.00</td>
+                            <td>
+                                <span th:if="${order.orderStatus == 'Pending' or order.orderStatus == null}" class="badge badge-pending"><i class="fa-regular fa-clock"></i> Pending</span>
+                                <span th:if="${order.orderStatus == 'Preparing'}" class="badge badge-preparing"><i class="fa-solid fa-fire"></i> Preparing</span>
+                                <span th:if="${order.orderStatus == 'Completed'}" class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> Completed</span>
+                                <span th:if="${order.orderStatus == 'Cancelled'}" class="badge badge-cancelled"><i class="fa-solid fa-ban"></i> Cancelled</span>
+                            </td>
+                            <td style="font-size: 0.75rem; color: var(--on-surface-variant);" th:text="${order.orderDate != null ? #dates.format(order.orderDate, 'dd MMM yyyy HH:mm') : 'N/A'}">Date</td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <a th:href="@{'/updateOrder/'+${order.oId}}" class="action-btn" style="color: #2563eb; background: #eff6ff;"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a th:href="@{'/deleteOrderAdmin/'+${order.oId}}" onclick="return confirm('Delete this order entry?');" class="action-btn" style="color: #dc2626; background: #fef2f2;"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(orders)}">
+                            <td colspan="8" style="text-align: center; color: var(--on-surface-variant); padding: 30px;">No order transactions available.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Customer Accounts Section -->
+        <section id="users" class="data-section reveal" style="transition-delay: 0.35s;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-users" style="color: var(--gold);"></i> Customer Accounts</h2>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <input type="text" id="searchUsersTable" class="table-search-input" placeholder="Search customers..." onkeyup="filterTable('searchUsersTable', 'usersTable')">
+                    <a th:href="@{/addUser}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.85rem;"><i class="fa-solid fa-user-plus"></i> Add User</a>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="admin-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer Name</th>
+                            <th>Email Address</th>
+                            <th>Mobile Number</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.u_id}">1</td>
+                            <td style="font-weight: 700;" th:text="${user.uname}">User</td>
+                            <td th:text="${user.uemail}">Email</td>
+                            <td th:text="${user.unumber}">0000000000</td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <a th:href="@{'/updateUser/'+${user.u_id}}" class="action-btn" style="color: #2563eb; background: #eff6ff;"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a th:href="@{'/deleteUser/'+${user.u_id}}" onclick="return confirm('Remove this customer account?');" class="action-btn" style="color: #dc2626; background: #fef2f2;"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(users)}">
+                            <td colspan="5" style="text-align: center; color: var(--on-surface-variant); padding: 30px;">No registered customer accounts.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
         <!-- Administrators Section -->
-        <section id="admins" class="data-section animate-up" style="animation-delay: 0.1s;">
+        <section id="admins" class="data-section reveal" style="transition-delay: 0.4s;">
             <div class="section-header">
-                <h2><i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Administrators</h2>
-                <a th:href="@{/addAdmin}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.75rem;">+ Add Admin</a>
+                <h2><i class="fa-solid fa-shield-halved" style="color: var(--gold);"></i> Administrators</h2>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <input type="text" id="searchAdminsTable" class="table-search-input" placeholder="Search staff..." onkeyup="filterTable('searchAdminsTable', 'adminsTable')">
+                    <a th:href="@{/addAdmin}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.85rem;"><i class="fa-solid fa-user-shield"></i> Add Admin</a>
+                </div>
             </div>
             <div class="table-container">
-                <table class="admin-table">
+                <table class="admin-table" id="adminsTable">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Password</th>
+                            <th>Admin Name</th>
+                            <th>Email Address</th>
                             <th>Mobile</th>
                             <th>Actions</th>
                         </tr>
@@ -92,114 +343,16 @@
                             <td th:text="${admin.adminId}">1</td>
                             <td style="font-weight: 700;" th:text="${admin.adminName}">Name</td>
                             <td th:text="${admin.adminEmail}">Email</td>
-                            <td><code th:text="${admin.adminPassword}">****</code></td>
-                            <td th:text="${admin.adminNumber}">000</td>
+                            <td th:text="${admin.adminNumber}">0000000000</td>
                             <td>
                                 <div style="display: flex; gap: 8px;">
-                                    <a th:href="@{'/updateAdmin/'+${admin.adminId}}" class="action-btn" style="color: #3b82f6; background: #eff6ff;"><i class="fa-solid fa-pen"></i></a>
-                                    <a th:href="@{'/deleteAdmin/'+${admin.adminId}}" class="action-btn" style="color: #ef4444; background: #fef2f2;"><i class="fa-solid fa-trash"></i></a>
+                                    <a th:href="@{'/updateAdmin/'+${admin.adminId}}" class="action-btn" style="color: #2563eb; background: #eff6ff;"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a th:href="@{'/deleteAdmin/'+${admin.adminId}}" onclick="return confirm('Remove administrator permissions for this account?');" class="action-btn" style="color: #dc2626; background: #fef2f2;"><i class="fa-solid fa-trash"></i> Delete</a>
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Users Section -->
-        <section id="users" class="data-section animate-up" style="animation-delay: 0.2s;">
-            <div class="section-header">
-                <h2><i class="fa-solid fa-users" style="color: var(--primary);"></i> Customer Accounts</h2>
-                <a th:href="@{/addUser}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.75rem;">+ Add User</a>
-            </div>
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Customer Name</th>
-                            <th>Email</th>
-                            <th>Mobile</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="user : ${users}">
-                            <td th:text="${user.u_id}">1</td>
-                            <td style="font-weight: 700;" th:text="${user.uname}">User</td>
-                            <td th:text="${user.uemail}">Email</td>
-                            <td th:text="${user.unumber}">000</td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <a th:href="@{'/updateUser/'+${user.u_id}}" class="action-btn" style="color: #3b82f6; background: #eff6ff;"><i class="fa-solid fa-pen"></i></a>
-                                    <a th:href="@{'/deleteUser/'+${user.u_id}}" class="action-btn" style="color: #ef4444; background: #fef2f2;"><i class="fa-solid fa-trash"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section id="products" class="data-section animate-up" style="animation-delay: 0.3s;">
-            <div class="section-header">
-                <h2><i class="fa-solid fa-utensils" style="color: var(--primary);"></i> Menu Management</h2>
-                <a th:href="@{/addProduct}" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.75rem;">+ Add Dish</a>
-            </div>
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Dish Name</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="product : ${products}">
-                            <td th:text="${product.pid}">1</td>
-                            <td style="font-weight: 700;" th:text="${product.pname}">Dish</td>
-                            <td style="color: var(--primary); font-weight: 700;" th:text="'₹' + ${product.pprice}">₹300</td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <a th:href="@{'/updateProduct/'+${product.pid}}" class="action-btn" style="color: #3b82f6; background: #eff6ff;"><i class="fa-solid fa-pen"></i></a>
-                                    <a th:href="@{'/deleteProduct/'+${product.pid}}" class="action-btn" style="color: #ef4444; background: #fef2f2;"><i class="fa-solid fa-trash"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Orders Section -->
-        <section id="orders" class="data-section animate-up" style="animation-delay: 0.4s;">
-            <div class="section-header">
-                <h2><i class="fa-solid fa-receipt" style="color: var(--primary);"></i> Order Transactions</h2>
-            </div>
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Dish</th>
-                            <th>Quantity</th>
-                            <th>Total Amount</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="order : ${orders}">
-                            <td>
-                                <div style="font-weight: 700;" th:text="${order.user.uname}">User</div>
-                                <div style="font-size: 0.75rem; color: var(--on-surface-variant);" th:text="${order.user.uemail}">Email</div>
-                            </td>
-                            <td th:text="${order.oName}">Dish</td>
-                            <td th:text="${order.oQuantity}">1</td>
-                            <td style="color: var(--primary); font-weight: 700;" th:text="'₹' + ${order.totalAmmout}">₹300</td>
-                            <td style="font-size: 0.75rem; color: var(--on-surface-variant);" th:text="${#dates.format(order.orderDate, 'dd MMM yyyy HH:mm')}">Date</td>
+                        <tr th:if="${#lists.isEmpty(admins)}">
+                            <td colspan="5" style="text-align: center; color: var(--on-surface-variant); padding: 30px;">No administrators listed.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -207,9 +360,82 @@
         </section>
     </main>
 
-    <footer style="margin-left: var(--sidebar-width); padding: 40px; text-align: center; color: var(--on-surface-variant); font-size: 0.875rem;">
-        &copy; 2026 Food Fiesta Admin Portal. All Rights Reserved.
+    <footer style="margin-left: var(--sidebar-width); padding: 40px; text-align: center; color: var(--on-surface-variant); font-size: 0.85rem;">
+        &copy; 2026 Food Fiesta Royal Admin Portal. All Rights Reserved.
     </footer>
-</body>
 
+    <script>
+        // Scroll reveal animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+
+        // Table search filter
+        function filterTable(inputId, tableId) {
+            const input = document.getElementById(inputId);
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById(tableId);
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                let show = false;
+                const td = tr[i].getElementsByTagName('td');
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            show = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = show ? '' : 'none';
+            }
+        }
+
+        // Export table to CSV
+        function exportTableToCSV(tableId) {
+            const table = document.getElementById(tableId);
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = [];
+                const cols = rows[i].querySelectorAll('td, th');
+                for (let j = 0; j < cols.length; j++) {
+                    let data = cols[j].innerText.replace(/,/g, '').replace(/\n/g, ' ').trim();
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(','));
+            }
+            
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', tableId + '_export.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Sidebar active link highlighting
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
 </html>

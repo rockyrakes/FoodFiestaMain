@@ -5,26 +5,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Royal Navbar Gold Accent */
+        .navbar.scrolled {
+            background: rgba(255, 252, 245, 0.95);
+            border-color: var(--gold);
+            box-shadow: 0 4px 30px rgba(201, 168, 76, 0.15);
+        }
+        
+        .nav-links .nav-btn-signin {
+            background: var(--gold-gradient);
+            color: var(--on-primary) !important;
+            padding: 10px 24px !important;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
+            transition: var(--transition);
+        }
+        
+        .nav-links .nav-btn-signin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(201, 168, 76, 0.4);
+        }
+        
+        .nav-links .nav-btn-signin::after {
+            display: none !important;
+        }
+        
+        .nav-links .nav-btn-dashboard {
+            border: 1.5px solid var(--gold);
+            color: var(--gold-dark) !important;
+            padding: 10px 24px !important;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            background: var(--glass-gold);
+            transition: var(--transition);
+        }
+        
+        .nav-links .nav-btn-dashboard:hover {
+            background: var(--gold);
+            color: var(--on-primary) !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-links .nav-btn-dashboard::after {
+            display: none !important;
+        }
+        
+        .nav-links .nav-btn-signout {
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            color: white !important;
+            padding: 10px 24px !important;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.25);
+            transition: var(--transition);
+        }
+        
+        .nav-links .nav-btn-signout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(128, 0, 32, 0.35);
+        }
+        
+        .nav-links .nav-btn-signout::after {
+            display: none !important;
+        }
+
+        /* Gold dot decoration on logo */
+        .nav-logo .gold-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            margin-left: 4px;
+            animation: goldPulse 2s ease-in-out infinite;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--gold-dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            transition: var(--transition);
+        }
+        
+        .mobile-menu-toggle:hover {
+            color: var(--gold);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 50%;
+                transform: translateX(-50%);
+                width: 95%;
+                background: var(--glass);
+                backdrop-filter: var(--blur);
+                -webkit-backdrop-filter: var(--blur);
+                border: 1px solid var(--outline);
+                border-radius: var(--radius-lg);
+                padding: 16px;
+                flex-direction: column;
+                gap: 8px;
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .nav-links.open {
+                display: flex;
+            }
+            
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 12px !important;
+            }
+            
+            .nav-links a::after {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav th:fragment="navbar()" class="navbar">
+    <nav th:fragment="navbar()" class="navbar" id="mainNav">
         <a href="/home" class="nav-logo">
-            <i class="fa-solid fa-fire-burner"></i> Food Fiesta
+            <i class="fa-solid fa-crown"></i> Food Fiesta<span class="gold-dot"></span>
         </a>
-        <div class="nav-links">
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="nav-links" id="navLinks">
             <a href="/home">Home</a>
             <a href="/products">Menu</a>
             <a href="/location">Location</a>
-            <a href="/about">Story</a>
-            <!-- Conditional links for logged-in Users -->
-            <a th:if="${session.loggedInUser}" href="/dashboard" class="btn btn-outline" style="padding: 10px 24px;">Dashboard</a>
-            <!-- Conditional links for logged-in Admins -->
-            <a th:if="${session.loggedInAdmin}" href="/admin/services" class="btn btn-outline" style="padding: 10px 24px;">Admin Portal</a>
-            <!-- Logout if anyone is logged in -->
-            <a th:if="${session.loggedInUser != null || session.loggedInAdmin != null}" href="/logout" class="btn btn-primary" style="padding: 10px 24px; color: white;">Sign Out</a>
-            <!-- Sign In if no one is logged in -->
-            <a th:if="${session.loggedInUser == null && session.loggedInAdmin == null}" href="/login" class="btn btn-primary" style="padding: 10px 24px; color: white;">Sign In</a>
+            <a href="/about">Our Story</a>
+            <!-- User Dashboard -->
+            <a th:if="${session.loggedInUser}" href="/dashboard" class="nav-btn-dashboard">
+                <i class="fa-solid fa-user"></i> Dashboard
+            </a>
+            <!-- Admin Portal -->
+            <a th:if="${session.loggedInAdmin}" href="/admin/services" class="nav-btn-dashboard">
+                <i class="fa-solid fa-shield-halved"></i> Admin
+            </a>
+            <!-- Sign Out -->
+            <a th:if="${session.loggedInUser != null || session.loggedInAdmin != null}" href="/logout" class="nav-btn-signout">
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </a>
+            <!-- Sign In -->
+            <a th:if="${session.loggedInUser == null && session.loggedInAdmin == null}" href="/login" class="nav-btn-signin">
+                <i class="fa-solid fa-user"></i> Sign In
+            </a>
         </div>
     </nav>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('open');
+        }
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#navLinks a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+    </script>
 </body>
 </html>
+

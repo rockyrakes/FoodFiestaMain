@@ -1,31 +1,41 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
 	<meta charset="UTF-8" />
-	<title>Document</title>
-	<link rel="stylesheet" href="" th:href="@{/css/Update_Product.css}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Update Product | Food Fiesta Royal</title>
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-
 <body>
-		<a href="/services">Back_To_Services</a>
-	<div class="updateProduct">
-		<h3 style="font-weight: bolder;color: seagreen;">UPDATE EXISTING PRODUCT :</h3>
-		<form action="" th:action="@{'/updatingProduct/'+${product.pid}}" th:object="${product}">
-			Product_Id:
-			<input type="hidden" th:text="${product.pid}" th:value="${product.pid}" /><br />
-			Product_Name :
-			<input type="text" name="pname" th:value="${product.pname}" /> <br />
-			Product_Price :
-			<input type="text" name="pprice" th:value="${product.pprice}" /><br />
-			Product_Desc : <br />
-			<textarea name="pdescription" th:value="${product.pdescription}" id="" cols="10" rows="1">
-
-	</textarea><br />
-			<button type="submit">Update_Product</button>
-
-		</form>
+	<div class="auth-wrapper" style="background: var(--surface-variant);">
+		<div class="auth-card animate-up" style="max-width: 500px;">
+			<div style="margin-bottom: 32px; text-align: center;">
+				<div style="width: 56px; height: 56px; background: var(--gold-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+					<i class="fa-solid fa-pen-to-square" style="font-size: 1.5rem; color: var(--on-primary);"></i>
+				</div>
+				<h2 style="font-size: 1.75rem; margin-bottom: 8px;">Update <span class="gold-text">Dish</span></h2>
+				<p style="font-size: 0.875rem; color: var(--on-surface-variant);">Modify menu item details</p>
+			</div>
+			<form th:action="@{'/updatingProduct/'+${product.pid}}" th:object="${product}" method="post">
+				<div style="margin-bottom: 20px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Dish Name</label>
+					<input type="text" name="pname" th:value="${product.pname}" class="input-field" required>
+				</div>
+				<div style="margin-bottom: 20px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Price (₹)</label>
+					<input type="text" name="pprice" th:value="${product.pprice}" class="input-field" required>
+				</div>
+				<div style="margin-bottom: 32px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Description</label>
+					<textarea name="pdescription" class="input-field" rows="3" style="resize: vertical;" th:text="${product.pdescription}"></textarea>
+				</div>
+				<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px;">
+					<a href="/admin/services" class="btn btn-outline">Cancel</a>
+					<button type="submit" class="btn btn-gold">Update Dish <i class="fa-solid fa-check"></i></button>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
-
 </html>

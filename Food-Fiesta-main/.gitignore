@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### H2 Database ###
+data/
+*.mv.db
+*.trace.db
+
+### Test files ###
+cookies.txt
+TODO.md
+test-*

@@ -2,25 +2,40 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8" />
-	<title>Admin : Update</title>
-		<link rel="stylesheet" href="" th:href="@{/css/Update_User.css}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Update User | Food Fiesta Royal</title>
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-	<a href="/services"> Back to Services</a>
-	<div class="updateUser">
-		<h3 style="color: red;"> UPDATE EXISTING USER/CUSTOMER </h3>
-		<form  action=""  th:action="@{'/updatingUser/'+${user.u_id}}"    th:object="${user}">
-			User_Id :
-			<input  type="hidden" name="uid" th:value="${user.u_id}" th:text="${user.u_id}"/><br />
-			User_Name :
-			<input type="text" name="uname" th:value="${user.uname}"/>
-			User_Emai :
-			<input type="email" name="uemail" th:value="${user.uemail}"  />
-			User_Number :
-			<input type="tel" name="unumber" th:value="${user.unumber}" pattern="[0-9]{10}"/>
-			
-		<button type="submit">Update_User</button>
-		</form>
+	<div class="auth-wrapper" style="background: var(--surface-variant);">
+		<div class="auth-card animate-up" style="max-width: 500px;">
+			<div style="margin-bottom: 32px; text-align: center;">
+				<div style="width: 56px; height: 56px; background: var(--gold-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+					<i class="fa-solid fa-user-pen" style="font-size: 1.5rem; color: var(--on-primary);"></i>
+				</div>
+				<h2 style="font-size: 1.75rem; margin-bottom: 8px;">Update <span class="gold-text">Customer</span></h2>
+				<p style="font-size: 0.875rem; color: var(--on-surface-variant);">Modify customer account details</p>
+			</div>
+			<form th:action="@{'/updatingUser/'+${user.u_id}}" th:object="${user}" method="post">
+				<div style="margin-bottom: 16px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Full Name</label>
+					<input type="text" name="uname" th:value="${user.uname}" class="input-field" required>
+				</div>
+				<div style="margin-bottom: 16px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Email Address</label>
+					<input type="email" name="uemail" th:value="${user.uemail}" class="input-field" required>
+				</div>
+				<div style="margin-bottom: 32px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Phone Number</label>
+					<input type="tel" name="unumber" th:value="${user.unumber}" class="input-field" pattern="[0-9]{10}" required>
+				</div>
+				<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px;">
+					<a href="/admin/services" class="btn btn-outline">Cancel</a>
+					<button type="submit" class="btn btn-gold">Update Customer <i class="fa-solid fa-check"></i></button>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
 </html>

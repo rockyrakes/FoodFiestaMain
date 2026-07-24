@@ -41,4 +41,23 @@ public class OrderServices
 	 return  this.orderRepository.findOrdersByUser(user);
 	}
 	
+	public Optional<Orders> getOrderById(int id)
+	{
+	 return this.orderRepository.findById(id);
+	}
+
+	public List<Object[]> getOrderCountPerUser()
+	{
+		return this.orderRepository.countOrdersGroupByUser();
+	}
+
+	public List<Object[]> getProductSalesSummary()
+	{
+		return this.orderRepository.getProductSalesSummary();
+	}
+
+	public List<Object[]> getUserOrdersSummary()
+	{
+		return this.orderRepository.getUserOrdersSummary();
+	}
 }

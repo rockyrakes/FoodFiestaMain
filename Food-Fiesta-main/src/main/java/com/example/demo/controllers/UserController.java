@@ -36,7 +36,7 @@ public class UserController
 		return "redirect:/login";
 	}
 
-	@GetMapping("/updatingUser/{id}")
+	@PostMapping("/updatingUser/{id}")
 	@Operation(summary = "Update a user", description = "Updates an existing customer's account info")
 	public String updateUser(@ModelAttribute User user, @PathVariable("id") int id)
 	{

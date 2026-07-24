@@ -1,0 +1,14 @@
+### H2 Database ###
+data/
+*.mv.db
+*.trace.db
+
+### Test files ###
+cookies.txt
+TODO.md
+test-*
+
+### OS files ###
+Thumbs.db
+.DS_Store
+

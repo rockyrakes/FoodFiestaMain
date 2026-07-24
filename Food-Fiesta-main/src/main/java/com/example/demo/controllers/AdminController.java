@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,7 +75,14 @@ public class AdminController {
 			return "redirect:/userLogin";
 		}
 		List<Orders> orders = this.orderServices.getOrdersForUser(loggedInUser);
+		double totalSpent = 0;
+		for (Orders o : orders) {
+			totalSpent += o.getTotalAmmout();
+		}
+		List<Product> allProducts = this.productServices.getAllProducts();
 		model.addAttribute("orders", orders);
+		model.addAttribute("totalSpent", totalSpent);
+		model.addAttribute("productsCount", allProducts.size());
 		model.addAttribute("name", loggedInUser.getUname());
 		return "BuyProduct";
 	}
@@ -95,7 +103,14 @@ public class AdminController {
 
 		Product product = this.productServices.getProductByName(name);
 		List<Orders> orders = this.orderServices.getOrdersForUser(loggedInUser);
+		double totalSpent = 0;
+		for (Orders o : orders) {
+			totalSpent += o.getTotalAmmout();
+		}
+		List<Product> allProducts = this.productServices.getAllProducts();
 		model.addAttribute("orders", orders);
+		model.addAttribute("totalSpent", totalSpent);
+		model.addAttribute("productsCount", allProducts.size());
 		model.addAttribute("name", loggedInUser.getUname());
 
 		if (product == null) {
@@ -116,10 +131,29 @@ public class AdminController {
 		List<Admin> admins = this.adminServices.getAll();
 		List<Product> products = this.productServices.getAllProducts();
 		List<Orders> orders = this.orderServices.getOrders();
+		List<Object[]> orderCounts = this.orderServices.getOrderCountPerUser();
+		List<Object[]> productSummary = this.orderServices.getProductSalesSummary();
+		List<Object[]> userOrdersSummary = this.orderServices.getUserOrdersSummary();
+
+		double totalRevenue = 0.0;
+		int totalItemsSold = 0;
+		for (Orders o : orders) {
+			totalRevenue += o.getTotalAmmout();
+			totalItemsSold += o.getoQuantity();
+		}
+
+		double avgOrderValue = orders.isEmpty() ? 0.0 : totalRevenue / orders.size();
+
 		model.addAttribute("users", users);
 		model.addAttribute("admins", admins);
 		model.addAttribute("products", products);
 		model.addAttribute("orders", orders);
+		model.addAttribute("orderCounts", orderCounts);
+		model.addAttribute("productSummary", productSummary);
+		model.addAttribute("userOrdersSummary", userOrdersSummary);
+		model.addAttribute("totalRevenue", totalRevenue);
+		model.addAttribute("totalItemsSold", totalItemsSold);
+		model.addAttribute("avgOrderValue", avgOrderValue);
 
 		return "Admin_Page";
 	}
@@ -146,7 +180,7 @@ public class AdminController {
 		model.addAttribute("admin", admin);
 		return "Update_Admin";
 	}
-	@GetMapping("/updatingAdmin/{id}")
+	@PostMapping("/updatingAdmin/{id}")
 	@Operation(summary = "Process Admin update", description = "Updates an existing administrator's information in the database")
 	public String updateAdmin(@ModelAttribute Admin admin,@PathVariable("id") int id)
 	{
@@ -210,10 +244,120 @@ public class AdminController {
 		return "Order_success";
 	}
 
+	@PostMapping("/checkout")
+	@Operation(summary = "Process checkout for selected orders", description = "Calculates total for selected orders and shows success page")
+	public String checkoutHandler(@RequestParam(value = "selectedOrders", required = false) List<Integer> orderIds, Model model, jakarta.servlet.http.HttpSession session) {
+		User loggedInUser = (User) session.getAttribute("loggedInUser");
+		if (loggedInUser == null) {
+			return "redirect:/userLogin";
+		}
+		if (orderIds == null || orderIds.isEmpty()) {
+			return "redirect:/dashboard";
+		}
+		double grandTotal = 0;
+		int itemCount = 0;
+		for (Integer oid : orderIds) {
+			Optional<Orders> opt = this.orderServices.getOrderById(oid);
+			if (opt.isPresent() && opt.get().getUser().getU_id() == loggedInUser.getU_id()) {
+				grandTotal += opt.get().getTotalAmmout();
+				itemCount++;
+			}
+		}
+		model.addAttribute("amount", grandTotal);
+		model.addAttribute("itemCount", itemCount);
+		return "Order_success";
+	}
+
 	@GetMapping("/product/back")
 	@Operation(summary = "Return to shop", description = "Navigates back to the product catalog after viewing orders")
 	public String back(jakarta.servlet.http.HttpSession session) {
 		return "redirect:/dashboard";
+	}
+
+	@GetMapping("/order/delete/{orderId}")
+	@Operation(summary = "Remove an order", description = "Deletes a specific order by ID for the logged-in user")
+	public String deleteOrder(@PathVariable("orderId") int id, jakarta.servlet.http.HttpSession session) {
+		User loggedInUser = (User) session.getAttribute("loggedInUser");
+		if (loggedInUser == null) {
+			return "redirect:/userLogin";
+		}
+		this.orderServices.deleteOrder(id);
+		return "redirect:/dashboard";
+	}
+
+	// ========== ADMIN ORDER MANAGEMENT ==========
+
+	@GetMapping("/addOrder")
+	@Operation(summary = "View Add Order page", description = "Serves the HTML form for admin to create a new order for any customer")
+	public String addOrderPage(Model model, jakarta.servlet.http.HttpSession session) {
+		if (session.getAttribute("loggedInAdmin") == null) {
+			return "redirect:/login";
+		}
+		List<User> users = this.services.getAllUser();
+		List<Product> products = this.productServices.getAllProducts();
+		model.addAttribute("users", users);
+		model.addAttribute("products", products);
+		model.addAttribute("order", new Orders());
+		return "Add_Order";
+	}
+
+	@PostMapping("/addingOrder")
+	@Operation(summary = "Create a new order (admin)", description = "Admin creates an order for a selected customer")
+	public String addOrder(@ModelAttribute Orders order, @RequestParam("userId") int userId, jakarta.servlet.http.HttpSession session) {
+		if (session.getAttribute("loggedInAdmin") == null) {
+			return "redirect:/login";
+		}
+		User user = this.services.getUser(userId);
+		double totalAmount = Logic.countTotal(order.getoPrice(), order.getoQuantity());
+		order.setTotalAmmout(totalAmount);
+		order.setUser(user);
+		order.setOrderDate(new Date());
+		this.orderServices.saveOrder(order);
+		return "redirect:/admin/services";
+	}
+
+	@GetMapping("/updateOrder/{orderId}")
+	@Operation(summary = "View Update Order page", description = "Loads the specified order details into the edit form for admin")
+	public String updateOrderPage(@PathVariable("orderId") int id, Model model, jakarta.servlet.http.HttpSession session) {
+		if (session.getAttribute("loggedInAdmin") == null) {
+			return "redirect:/login";
+		}
+		Optional<Orders> optional = this.orderServices.getOrderById(id);
+		if (optional.isPresent()) {
+			Orders order = optional.get();
+			List<User> users = this.services.getAllUser();
+			List<Product> products = this.productServices.getAllProducts();
+			model.addAttribute("order", order);
+			model.addAttribute("users", users);
+			model.addAttribute("products", products);
+			return "Update_Order";
+		}
+		return "redirect:/admin/services";
+	}
+
+	@PostMapping("/updatingOrder/{id}")
+	@Operation(summary = "Update an order (admin)", description = "Admin updates an existing order details")
+	public String updateOrder(@ModelAttribute Orders order, @PathVariable("id") int id, @RequestParam("userId") int userId, jakarta.servlet.http.HttpSession session) {
+		if (session.getAttribute("loggedInAdmin") == null) {
+			return "redirect:/login";
+		}
+		User user = this.services.getUser(userId);
+		double totalAmount = Logic.countTotal(order.getoPrice(), order.getoQuantity());
+		order.setTotalAmmout(totalAmount);
+		order.setUser(user);
+		order.setoId(id);
+		this.orderServices.saveOrder(order);
+		return "redirect:/admin/services";
+	}
+
+	@GetMapping("/deleteOrderAdmin/{orderId}")
+	@Operation(summary = "Delete an order (admin)", description = "Admin removes an order from the system by ID")
+	public String deleteOrderAdmin(@PathVariable("orderId") int id, jakarta.servlet.http.HttpSession session) {
+		if (session.getAttribute("loggedInAdmin") == null) {
+			return "redirect:/login";
+		}
+		this.orderServices.deleteOrder(id);
+		return "redirect:/admin/services";
 	}
 
 }

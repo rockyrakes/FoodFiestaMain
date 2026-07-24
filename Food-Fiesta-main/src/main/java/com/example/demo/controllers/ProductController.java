@@ -33,7 +33,7 @@ public class ProductController
 	}
 
 	//	UpdateProduct
-	@GetMapping("/updatingProduct/{productId}")
+	@PostMapping("/updatingProduct/{productId}")
 	@Operation(summary = "Update a product", description = "Modifies an existing food item's details")
 	public String updateProduct(@ModelAttribute Product product,@PathVariable("productId") int id)
 	{

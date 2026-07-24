@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Order | Food Fiesta Royal</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="auth-wrapper" style="background: var(--surface-variant);">
+        <div class="auth-card animate-up" style="max-width: 500px;">
+            <div style="margin-bottom: 32px; text-align: center;">
+                <div style="width: 56px; height: 56px; background: var(--gold-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fa-solid fa-pen-to-square" style="font-size: 1.5rem; color: var(--on-primary);"></i>
+                </div>
+                <h2 style="font-size: 1.75rem; margin-bottom: 8px;">Update <span class="gold-text">Order</span></h2>
+                <p style="font-size: 0.875rem; color: var(--on-surface-variant);">Modify order details</p>
+            </div>
+            <form th:action="@{'/updatingOrder/'+${order.oId}}" th:object="${order}" method="post">
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 0.875rem; font-weight: 700;">Customer</label>
+                    <select name="userId" class="input-field" required>
+                        <option th:each="user : ${users}" th:value="${user.u_id}" th:text="${user.uname} + ' (' + ${user.uemail} + ')'" th:selected="${order.user.u_id == user.u_id}">Customer</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 0.875rem; font-weight: 700;">Dish Name</label>
+                    <input type="text" name="oName" th:value="${order.oName}" class="input-field" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 0.875rem; font-weight: 700;">Unit Price (₹)</label>
+                    <input type="number" step="0.01" name="oPrice" th:value="${order.oPrice}" class="input-field" required>
+                </div>
+				<div style="margin-bottom: 20px;">
+                    <label style="font-size: 0.875rem; font-weight: 700;">Quantity</label>
+                    <input type="number" name="oQuantity" th:value="${order.oQuantity}" class="input-field" min="1" required>
+                </div>
+                <div style="margin-bottom: 32px;">
+                    <label style="font-size: 0.875rem; font-weight: 700;">Order Status</label>
+                    <select name="orderStatus" class="input-field" required>
+                        <option value="Pending" th:selected="${order.orderStatus == 'Pending'}">⏳ Pending</option>
+                        <option value="Preparing" th:selected="${order.orderStatus == 'Preparing'}">👨‍🍳 Preparing</option>
+                        <option value="Completed" th:selected="${order.orderStatus == 'Completed'}">✅ Completed</option>
+                        <option value="Cancelled" th:selected="${order.orderStatus == 'Cancelled'}">❌ Cancelled</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px;">
+                    <a href="/admin/services" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-gold">Update Order <i class="fa-solid fa-check"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer style="padding: 40px; text-align: center; color: var(--on-surface-variant); font-size: 0.85rem;">&copy; 2026 Food Fiesta Royal Admin Gateway.</footer>
+</body>
+</html>
+

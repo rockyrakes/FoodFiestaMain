@@ -22,6 +22,7 @@ public class Orders
 	private int oQuantity;
 	private Date orderDate;
 	private double totalAmmout;
+	private String orderStatus = "Pending";
 	
 	@ManyToOne
 	@JoinColumn(name="user_u_id")
@@ -84,6 +85,14 @@ public class Orders
 
 	public void setTotalAmmout(double totalAmmout) {
 		this.totalAmmout = totalAmmout;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 
 	@Override

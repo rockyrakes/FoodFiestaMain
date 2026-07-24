@@ -1,29 +1,41 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.com">
-
 <head>
 	<meta charset="UTF-8" />
-	<title>Document</title>
-	<link rel="stylesheet" href="" th:href="@{/css/Add_Product.css}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add Product | Food Fiesta Royal</title>
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-
 <body>
-<a href="/admin/services">Back to Services</a>
-	<div class="addProducts">
-		<h3 style="font-weight: bolder;color: seagreen;">ADD NEW PRODUCT :</h3>
-		<form action="" th:action="@{/addingProduct}" method="post">
-			Product_Name :
-			<input type="text" name="pname" value="" placeholder="Enter Product Name....." /> <br />
-			Product_Price :
-			<input type="text" name="pprice" placeholder="Enter Product Price...." /><br />
-			Product_Desc : <br />
-			<textarea name="pdescription" id="" cols="15" rows="1"
-				placeholder="Enter Product Description.."></textarea><br />
-
-			<button type="submit">Add_Product</button>
-
-		</form>
+	<div class="auth-wrapper" style="background: var(--surface-variant);">
+		<div class="auth-card animate-up" style="max-width: 500px;">
+			<div style="margin-bottom: 32px; text-align: center;">
+				<div style="width: 56px; height: 56px; background: var(--gold-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+					<i class="fa-solid fa-utensils" style="font-size: 1.5rem; color: var(--on-primary);"></i>
+				</div>
+				<h2 style="font-size: 1.75rem; margin-bottom: 8px;">Add New <span class="gold-text">Dish</span></h2>
+				<p style="font-size: 0.875rem; color: var(--on-surface-variant);">Expand your royal menu</p>
+			</div>
+			<form th:action="@{/addingProduct}" method="post">
+				<div style="margin-bottom: 20px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Dish Name</label>
+					<input type="text" name="pname" placeholder="Enter dish name..." class="input-field" required>
+				</div>
+				<div style="margin-bottom: 20px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Price (₹)</label>
+					<input type="text" name="pprice" placeholder="Enter price..." class="input-field" required>
+				</div>
+				<div style="margin-bottom: 32px;">
+					<label style="font-size: 0.875rem; font-weight: 700;">Description</label>
+					<textarea name="pdescription" class="input-field" rows="3" placeholder="Describe this royal dish..." style="resize: vertical;"></textarea>
+				</div>
+				<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px;">
+					<a href="/admin/services" class="btn btn-outline">Cancel</a>
+					<button type="submit" class="btn btn-gold">Add to Menu <i class="fa-solid fa-plus"></i></button>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
-
 </html>

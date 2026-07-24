@@ -24,19 +24,20 @@ public class AdminServices
 	public Admin getAdmin(int id)
 	{
 		Optional<Admin> optional = this.adminRepository.findById(id);
-		Admin admin=optional.get();
-		return admin;
+		return optional.orElse(null);
 	}
 
-	public void update(Admin admin ,int id)
+	public void update(Admin admin, int id)
 	{
-		for (Admin ad : getAll()) 
-		{
-			if(ad.getAdminId()==id)
-			{
-				this.adminRepository.save(admin);
+		admin.setAdminId(id);
+		Optional<Admin> existingOpt = this.adminRepository.findById(id);
+		if (existingOpt.isPresent()) {
+			Admin existingAdmin = existingOpt.get();
+			if (admin.getAdminPassword() == null || admin.getAdminPassword().trim().isEmpty()) {
+				admin.setAdminPassword(existingAdmin.getAdminPassword());
 			}
 		}
+		this.adminRepository.save(admin);
 	}
 	
 	public void delete(int id)

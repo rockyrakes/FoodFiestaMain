@@ -1,50 +1,254 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Food Fiesta</title>
+    <title>About | Food Fiesta Royal</title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        .about-hero { padding: 160px 5% 80px; text-align: center; background: var(--surface-variant); position: relative; }
+        .about-content { max-width: 1200px; margin: 0 auto; padding: 80px 5%; }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 60px 0; }
+        .stat-item { text-align: center; padding: 32px 16px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--outline); }
+        .stat-item:hover { border-color: var(--gold); box-shadow: var(--shadow-lg); transform: translateY(-4px); transition: var(--transition); }
+        .stat-number { font-size: 2.5rem; font-weight: 800; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .timeline { position: relative; margin: 60px 0; padding-left: 40px; }
+        .timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--gold-gradient); }
+        .timeline-item { position: relative; margin-bottom: 40px; padding-left: 40px; }
+        .timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 16px; height: 16px; background: var(--gold-gradient); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px var(--gold); }
+        .timeline-item h3 { font-size: 1.2rem; }
+        .timeline-item .year { color: var(--gold); font-weight: 800; font-size: 0.85rem; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin: 40px 0; }
+        .team-card { text-align: center; padding: 32px 20px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--outline); transition: var(--transition); }
+        .team-card:hover { border-color: var(--gold); transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .team-card .avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--gold-gradient); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 2rem; color: white; }
+        .team-card h4 { margin-bottom: 4px; }
+        .team-card .role { color: var(--gold); font-weight: 600; font-size: 0.85rem; }
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 40px 0; }
+        .value-card { padding: 32px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--outline); border-top: 4px solid var(--gold); transition: var(--transition); }
+        .value-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .value-card i { font-size: 2rem; color: var(--gold); margin-bottom: 16px; }
+        @media (max-width: 768px) { 
+            .about-hero { padding-top: 120px; } 
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
-
 <body>
     <nav th:replace="~{Navigation::navbar()}"></nav>
-
-    <main class="section-padding">
+    
+    <!-- Hero Section -->
+    <section class="about-hero">
         <div class="container">
-            <div style="text-align: center; max-width: 800px; margin: 0 auto 100px;">
-                <span style="letter-spacing: 0.2em; font-weight: 800; color: var(--primary); font-size: 0.75rem; text-transform: uppercase;">Our Story</span>
-                <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin: 16px 0 24px;">Born from a passion for <span style="color: var(--primary);">Authenticity</span>.</h1>
-                <p style="font-size: 1.25rem; color: var(--on-surface-variant);">
-                    Founded in 2024, Food Fiesta was built on the belief that fine dining should be accessible, exciting, and absolutely delicious. We bridge the gap between world-class kitchens and your doorstep.
-                </p>
-            </div>
+            <span class="section-tag">Our Royal Story</span>
+            <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin: 16px 0 24px;">Born from a passion for <span class="gold-text">Authenticity</span>.</h1>
+            <div class="gold-divider"></div>
+            <p style="font-size: 1.15rem; color: var(--on-surface-variant); max-width: 700px; margin: 20px auto 0;">Founded in 2024, Food Fiesta Royal was built on the belief that fine dining should be accessible, exciting, and absolutely delicious. We bridge the gap between world-class kitchens and your doorstep.</p>
+        </div>
+    </section>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 64px; align-items: center;">
-                <div class="animate-up">
-                    <img th:src="@{/Images/istockphoto-1006271368-612x612.jpg}" alt="Kitchen" style="width: 100%; border-radius: 40px; box-shadow: var(--shadow-lg);">
+    <!-- Stats Row -->
+    <section class="about-content">
+        <div class="container">
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <p style="color: var(--on-surface-variant); font-weight: 600;">Premium Dishes</p>
                 </div>
-                <div class="animate-up" style="animation-delay: 0.2s;">
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <p style="color: var(--on-surface-variant); font-weight: 600;">Happy Customers</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4.9★</div>
+                    <p style="color: var(--on-surface-variant); font-weight: 600;">Avg. Rating</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30min</div>
+                    <p style="color: var(--on-surface-variant); font-weight: 600;">Avg. Delivery</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story + Image -->
+    <section class="about-content" style="padding-top: 0;">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 64px; align-items: center;">
+                <div>
+                    <img th:src="@{/Images/istockphoto-1006271368-612x612.jpg}" alt="Our Premium Kitchen" style="width: 100%; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); border: 1px solid var(--outline);">
+                </div>
+                <div>
                     <div style="display: flex; flex-direction: column; gap: 32px;">
-                        <div class="card-glass" style="border-left: 6px solid var(--primary);">
-                            <h3 style="font-size: 1.5rem; margin-bottom: 12px;">The Vision</h3>
+                        <div class="card-glass" style="border-left: 4px solid var(--gold); padding: 28px;">
+                            <h3 style="font-size: 1.5rem; margin-bottom: 12px;"><i class="fa-solid fa-crown" style="color: var(--gold);"></i> The Vision</h3>
                             <p style="color: var(--on-surface-variant);">To be the global benchmark for gourmet delivery, celebrated for our uncompromising quality and culinary transparency.</p>
                         </div>
-                        <div class="card-glass" style="border-left: 6px solid var(--primary-light);">
-                            <h3 style="font-size: 1.5rem; margin-bottom: 12px;">The Mission</h3>
+                        <div class="card-glass" style="border-left: 4px solid var(--gold); padding: 28px;">
+                            <h3 style="font-size: 1.5rem; margin-bottom: 12px;"><i class="fa-solid fa-bullseye" style="color: var(--gold);"></i> The Mission</h3>
                             <p style="color: var(--on-surface-variant);">Connecting communities through the universal language of great food, while supporting sustainable local farming and expert craftsmanship.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <footer style="padding: 60px 5%; text-align: center; border-top: 1px solid var(--outline); font-size: 0.875rem; color: var(--on-surface-variant);">
-        &copy; 2026 Food Fiesta. Crafted with uncompromising standards.
-    </footer>
+    <!-- Our Values -->
+    <section style="background: var(--surface-variant); padding: 80px 5%;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <span class="section-tag">What We Stand For</span>
+                <h2 style="font-size: 2.5rem; margin-top: 8px;">Our Core <span class="gold-text">Values</span></h2>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fa-solid fa-seedling"></i>
+                    <h3>Farm to Table</h3>
+                    <p style="color: var(--on-surface-variant);">100% organic ingredients sourced directly from local sustainable farms across India.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-hand-sparkles"></i>
+                    <h3>Uncompromised Quality</h3>
+                    <p style="color: var(--on-surface-variant);">Every dish is crafted with precision by our master chefs using time-honored techniques.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-heart"></i>
+                    <h3>Customer First</h3>
+                    <p style="color: var(--on-surface-variant);">Your satisfaction drives everything we do. From packaging to delivery, we put you first.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-recycle"></i>
+                    <h3>Sustainable Practices</h3>
+                    <p style="color: var(--on-surface-variant);">Eco-friendly packaging, zero food waste policy, and carbon-neutral delivery fleet.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-flask"></i>
+                    <h3>Innovation</h3>
+                    <p style="color: var(--on-surface-variant);">Constantly evolving our menu with fusion dishes that blend tradition with modernity.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                    <h3>Community</h3>
+                    <p style="color: var(--on-surface-variant);">Supporting local farmers, artisans, and food entrepreneurs through our Royal Partners program.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Journey Timeline -->
+    <section style="padding: 80px 5%;">
+        <div class="container" style="max-width: 800px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <span class="section-tag">Our Journey</span>
+                <h2 style="font-size: 2.5rem; margin-top: 8px;">The Royal <span class="gold-text">Timeline</span></h2>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="year">📅 2022</span>
+                    <h3>The Idea is Born</h3>
+                    <p style="color: var(--on-surface-variant);">Founders Rahul & Priya dream of creating a premium food delivery experience that brings restaurant-quality meals home.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="year">📅 2023</span>
+                    <h3>First Test Kitchen</h3>
+                    <p style="color: var(--on-surface-variant);">A small kitchen in New Delhi starts serving 10 signature dishes. Word spreads like wildfire.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="year">📅 2024</span>
+                    <h3>Official Launch 🚀</h3>
+                    <p style="color: var(--on-surface-variant);">Food Fiesta Royal is officially launched with 4 outlets across Delhi NCR and a dedicated delivery fleet.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="year">📅 2025</span>
+                    <h3>Expansion to Mumbai</h3>
+                    <p style="color: var(--on-surface-variant);">Opened flagship stores in Mumbai and Gurugram. Crossed 10,000 happy customers milestone.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="year">📅 2026</span>
+                    <h3>The Royal Future</h3>
+                    <p style="color: var(--on-surface-variant);">Planning expansion to 5 more cities. Launching our Royal Membership program for exclusive benefits.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meet the Team -->
+    <section style="background: var(--surface-variant); padding: 80px 5%;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <span class="section-tag">Leadership</span>
+                <h2 style="font-size: 2.5rem; margin-top: 8px;">Meet the <span class="gold-text">Royal Team</span></h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                    <h4>Rahul Sharma</h4>
+                    <p class="role">CEO & Co-Founder</p>
+                    <p style="font-size: 0.85rem; color: var(--on-surface-variant); margin-top: 8px;">20+ years in hospitality. Former executive at Taj Hotels.</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar"><i class="fa-solid fa-user-chef"></i></div>
+                    <h4>Chef Vikram</h4>
+                    <p class="role">Head Chef</p>
+                    <p style="font-size: 0.85rem; color: var(--on-surface-variant); margin-top: 8px;">Master of Indian & Continental cuisine. Michelin-star trained.</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar"><i class="fa-solid fa-user-gear"></i></div>
+                    <h4>Priya Mehta</h4>
+                    <p class="role">COO & Co-Founder</p>
+                    <p style="font-size: 0.85rem; color: var(--on-surface-variant); margin-top: 8px;">Operations expert from IIM Ahmedabad. Scaling royal experiences.</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                    <h4>Ananya Kapoor</h4>
+                    <p class="role">Head of Quality</p>
+                    <p style="font-size: 0.85rem; color: var(--on-surface-variant); margin-top: 8px;">Ensures every dish meets our gold standard before delivery.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section style="padding: 80px 5%;">
+        <div class="container" style="max-width: 700px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <span class="section-tag">What They Say</span>
+                <h2 style="font-size: 2.5rem; margin-top: 8px;">Royal <span class="gold-text">Testimonials</span></h2>
+            </div>
+            <div style="background: white; padding: 40px; border-radius: var(--radius-xl); border: 1px solid var(--outline); text-align: center;">
+                <i class="fa-solid fa-quote-right" style="font-size: 2.5rem; color: var(--gold); opacity: 0.3; margin-bottom: 20px;"></i>
+                <p style="font-size: 1.2rem; font-style: italic; color: var(--on-surface);">"The Butter Chicken from Food Fiesta Royal is absolutely divine! It's the closest thing to home-cooked perfection I've ever had delivered. The packaging, the taste, the prompt delivery—everything is 5-star worthy!"</p>
+                <div style="margin-top: 24px;">
+                    <div style="color: var(--gold); font-size: 1.1rem;">★★★★★</div>
+                    <p style="font-weight: 700; margin-top: 8px;">— Ananya S., New Delhi</p>
+                    <p style="font-size: 0.85rem; color: var(--on-surface-variant);">Regular Customer since 2024</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background: var(--gold-gradient); padding: 60px 5%; text-align: center; color: var(--on-primary);">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 16px;">Ready for a Royal Feast?</h2>
+            <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 32px;">Experience the finest gourmet delivery across India.</p>
+            <a href="/products" class="btn btn-primary" style="background: white; color: var(--gold-dark); box-shadow: 0 8px 30px rgba(0,0,0,0.15);">Explore Our Menu <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <footer class="royal-footer"><div class="container" style="text-align: center;"><p style="color: rgba(255,255,255,0.5);">&copy; 2026 Food Fiesta Royal. Crafted with uncompromising standards.</p></div></footer>
+
+    <script>
+        // Ensure all content is immediately visible
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+        });
+    </script>
 </body>
-
 </html>
+
