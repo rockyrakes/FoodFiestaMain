@@ -1,197 +1,197 @@
-# Food Fiesta 🍽️ - Royal Restaurant Management System
+# 🍽️ Food Fiesta Royal — Restaurant Management System
 
-**Food Fiesta** is a premium fullstack restaurant management application built with **Java 21**, **Spring Boot 3.4.2**, **Thymeleaf**, **Spring Security**, **Spring Data JPA**, and **H2** for quick local development. The project features a dual-interface system for customers and administrators with comprehensive CRUD operations and analytics.
+## 👋 What is this project? (Explained Simply)
 
-Live Demo: [http://localhost:8081](http://localhost:8081) | Admin: `admin@foodfiesta.com` / `admin123`
+Imagine you own a **restaurant** called "Food Fiesta Royal." 👑
 
----
+You need two websites:
 
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.2-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
-[![H2](https://img.shields.io/badge/Database-H2-blue.svg)](https://www.h2database.com/)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203-85EA2D.svg)](https://swagger.io/)
-[![Thymeleaf](https://img.shields.io/badge/Template-Thymeleaf-005F0F.svg)](https://www.thymeleaf.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+1. **A menu website for customers** — so people can see your dishes and order food 🧑‍🍳
+2. **A secret control room for YOU (the manager)** — so you can manage everything from one place 🕹️
+
+**This project is BOTH of those things!** It's a big computer program that acts like the brain of your restaurant.
 
 ---
 
-## 🚀 Features
+## 🧸 Let's use a REAL-LIFE ANALOGY
 
-### 👑 Admin Dashboard
-- **Overview Dashboard** - Revenue stats, order volume, items sold, registered customers, and staff counts
-- **Product Popularity Analytics** - Best seller tracking with sales metrics per dish
-- **Customer Order Summary** - Per-user spending, order counts, and VIP/Gold/Regular tier badges
-- **Menu Management** - Full CRUD (Add/Edit/Delete) for dishes with search filtering
-- **Order Transactions** - Complete order lifecycle with status tracking (Pending → Preparing → Completed/Cancelled)
-- **Customer Accounts** - User management with full CRUD operations
-- **Admin Management** - Staff account creation and permissions management
-- **CSV Export** - One-click export of orders table to CSV
-- **Live Search** - Real-time table filtering across all sections
+Think of this project like a **restaurant with a notebook and a waiter**:
 
-### 👤 Customer Portal
-- **User Registration & Login** - Self-registration and secure authentication
-- **Product Browsing** - Browse royal menu with dish categories and descriptions
-- **Order Placement** - Select dishes, set quantities, and place orders
-- **Order History** - View past orders with dates and amounts
-- **Multi-Select Checkout** - Select multiple orders and checkout with grand total calculation
-- **Order Success Screen** - Confirmation with total amount and confetti animation
-
-### 🔐 Security
-- **Session-based Authentication** - Custom `SessionAuthenticationFilter` for admin and user sessions
-- **Role-based Access** - Separate admin and customer login portals
-- **Optional Google OAuth2** - Pre-configured Google login integration
+| Real Restaurant | This Computer Project |
+|:---------------|:---------------------|
+| 📓 Notebook with customer info | **Database** (stores all data) |
+| 🧑‍💼 Waiter who takes orders | **Controllers** (handles requests) |
+| 👨‍🍳 Chef who cooks food | **Services** (processes the logic) |
+| 📋 Menu card | **HTML Pages** (what you see) |
+| 🖌️ Restaurant decoration | **CSS** (colors, fonts, styles) |
+| 🚪 Lock on the door | **Spring Security** (keeps坏人 out) |
 
 ---
 
-## 📸 Screenshots
+## 🏗️ What Technologies are Used? (Like Building Blocks)
 
-| Home Page | Admin Dashboard |
-|:---------:|:--------------:|
-| ![Home](./screenshot/home.png) | ![Admin](./screenshot/admin-services.png) |
-| **Products** | **User Login** |
-| ![Products](./screenshot/products.png) | ![User Login](./screenshot/userLogin.png) |
+Each technology is like a different LEGO block that does a specific job:
 
----
+### 🧱 BLOCK 1: Java 21 (The Main Language)
+**What it is:** A programming language — like English but for computers.
 
-## 🛠️ Technology Stack
+**What it does:** Everything in this project is written in Java. It's the brain that tells the computer:
+- "When someone clicks 'Order Now', save the order"
+- "When admin logs in, show the dashboard"
+- "Calculate the total price: price × quantity"
 
-| Layer | Technology |
-| :--- | :--- |
-| **Backend** | Java 21, Spring Boot 3.4.2, Spring Security, Spring Data JPA, Hibernate |
-| **Database** | H2 (file-based for dev), PostgreSQL (production-ready) |
-| **Frontend** | Thymeleaf, HTML5, CSS3 (custom design system), Vanilla JavaScript |
-| **Styling** | Premium design system with CSS custom properties, glassmorphism, gold accents |
-| **Build Tool** | Apache Maven (with wrapper) |
-| **API Docs** | SpringDoc OpenAPI / Swagger UI |
-| **Auth** | Session-based + Google OAuth2 (optional) |
+💡 **Think of it like:** The recipe book that tells the chef what to cook and how.
 
 ---
 
-## 📊 Database Schema
+### 🧱 BLOCK 2: Spring Boot 3.4.2 (The Robot Helper)
+**What it is:** A big collection of ready-made tools that make Java easier.
 
-```mermaid
-erDiagram
-    USER ||--o{ ORDERS : "places"
-    USER {
-        int u_id PK
-        string uname
-        string uemail
-        string upassword
-        long unumber
-    }
-    ADMIN {
-        int adminId PK
-        string adminName
-        string adminEmail
-        string adminPassword
-        string adminNumber
-    }
-    PRODUCT {
-        int pid PK
-        string pname
-        double pprice
-        string pdescription
-    }
-    ORDERS {
-        int oId PK
-        string oName
-        double oPrice
-        int oQuantity
-        date orderDate
-        double totalAmmout
-        string orderStatus
-        int user_u_id FK
-    }
+**Without Spring Boot:** You'd have to write 1000 lines of code just to connect to a database. 😱
+**With Spring Boot:** You just write `@Autowired` and it magically works! ✨
+
+**What it does automatically:**
+- ✅ Creates web pages when you visit a URL
+- ✅ Connects to the database
+- ✅ Handles user logins
+- ✅ Makes sure everything runs smoothly
+
+💡 **Think of it like:** A factory robot that does all the boring, repetitive work so you can focus on the fun stuff.
+
+---
+
+### 🧱 BLOCK 3: Thymeleaf (The Page Maker)
+**What it is:** A tool that puts LIVE data into HTML pages.
+
+**The Problem:** If you write a plain HTML page, the name "Rahul" is stuck forever.
+**The Solution:** Thymeleaf lets you write:
+```html
+<p>Hello, <span th:text="${customerName}">Guest</span>!</p>
+```
+If the customer is "Rahul" → page shows "Hello, Rahul!"
+If the customer is "Priya" → page shows "Hello, Priya!"
+
+💡 **Think of it like:** A coloring book where the colors change based on who's holding it. 📘
+
+---
+
+### 🧱 BLOCK 4: Spring Data JPA (The Database Connector)
+**What it is:** A tool that saves and reads data from the database.
+
+**What it does:** Instead of writing complicated SQL queries like:
+```sql
+SELECT * FROM users WHERE email = 'admin@foodfiesta.com'
+```
+You can just write in Java:
+```java
+User user = userRepository.findByEmail("admin@foodfiesta.com");
 ```
 
----
-
-## 🚦 Quick Start
-
-### Prerequisites
-- JDK 21+
-- Git
-
-### Run Locally
-
-```bash
-# Clone the repository
-git clone https://github.com/rockyrakes/FoodFiestaMain.git
-cd FoodFiestaMain
-
-# Run with Maven Wrapper
-.\mvnw.cmd spring-boot:run
-```
-
-### Access the Application
-
-| URL | Description |
-|:---|:---|
-| http://localhost:8081/ | Home Page |
-| http://localhost:8081/login | Admin & User Login |
-| http://localhost:8081/admin/services | **Admin Dashboard** |
-| http://localhost:8081/swagger-ui/index.html | Swagger API Docs |
-| http://localhost:8081/h2-console | H2 Database Console |
-
-### Default Login Credentials
-
-| Role | Email | Password |
-|:---|:---|:---|
-| **Admin** | admin@foodfiesta.com | admin123 |
-| **User** | Register via /register or ask admin to create |
+💡 **Think of it like:** A remote control for your database — just press a button and it fetches what you need. 🎮
 
 ---
 
-## 📋 Admin Dashboard Sections
+### 🧱 BLOCK 5: H2 Database (The Notebook)
+**What it is:** A tiny database that lives inside a file on your computer.
 
-The admin panel at `/admin/services` contains:
+**What it stores:**
+- 📝 Customer names, emails, passwords
+- 🍕 Menu items and prices
+- 📦 Orders people placed
+- 👤 Admin accounts
 
-1. **📊 Stats Overview** - 7 stat cards: Revenue, Avg Order Value, Menu Items, Items Sold, Orders, Customers, Admins
-2. **🔥 Product Popularity** - Sales per dish with Best Seller / Popular / Standard badges
-3. **👥 Customer Order Summary** - Per-user analytics with Royal VIP / Gold / Regular tiers
-4. **🍽️ Menu Management** - Full product CRUD with live search
-5. **📄 Order Transactions** - Complete order management with status badges and CSV export
-6. **👤 Customer Accounts** - User CRUD management
-7. **🛡️ Administrators** - Admin CRUD management
+**The file is located at:** `data/foodfiesta.mv.db`
 
----
+💡 **Think of it like:** A pocket diary where you write everything down. When you close the app, the diary still has all the info saved.
 
-## 🔧 Configuration
-
-### Application Properties (`src/main/resources/application.properties`)
-
-```properties
-server.port=8081
-spring.datasource.url=jdbc:h2:file:./data/foodfiesta
-spring.jpa.hibernate.ddl-auto=update
-spring.h2.console.enabled=true
-```
-
-### PostgreSQL (Production)
-Edit `application.properties`:
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/foodfiesta
-spring.datasource.username=postgres
-spring.datasource.password=YOUR_PASSWORD
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-```
-
-### Google OAuth2
-```properties
-spring.security.oauth2.client.registration.google.client-id=YOUR_CLIENT_ID
-spring.security.oauth2.client.registration.google.client-secret=YOUR_CLIENT_SECRET
-```
+**Bonus:** You can also use PostgreSQL (a bigger, stronger database) when you're ready to launch.
 
 ---
 
-## 🐳 Docker Deployment
+### 🧱 BLOCK 6: Spring Security (The Bodyguard 🛡️)
+**What it is:** A security system that protects the website.
 
-```bash
-# Build image
-docker build -t food-fiesta .
+**What it prevents:**
+- ❌ Random people from seeing the admin dashboard
+- ❌ Hackers from stealing data
+- ❌ People from placing orders without logging in
 
-# Run container
-docker run -p 8081:8081 --name food-fiesta-app food-fiesta
+**How it works:**
+1. You log in with email + password
+2. The app gives you a "session cookie" (like a stamp on your hand at a concert 🎟️)
+3. Every time you visit a page, the app checks your stamp
+4. If no stamp → you get sent back to login page
+
+💡 **Think of it like:** A bouncer at a club who checks your ID before letting you in. 🚪
+
+---
+
+### 🧱 BLOCK 7: CSS (The Decorator 🎨)
+**Files:** `main.css`, `Admin_Page.css`, etc.
+
+**What it is:** Code that makes the website look beautiful.
+
+**What it controls:**
+- 🎨 Colors (gold, burgundy, cream)
+- 📐 Layout (sidebar on left, content on right)
+- 🌀 Animations (buttons that glow, cards that slide up)
+- 🖼️ Fonts (fancy "Playfair Display" for headings)
+
+💡 **Think of it like:** The interior designer who paints the walls, picks the furniture, and hangs the lights. 🪑
+
+---
+
+### 🧱 BLOCK 8: JavaScript (The Helper 🤹)
+**File:** `Products.js`
+
+**What it is:** Code that runs in your browser (not on the server).
+
+**What it does (client-side magic):**
+- 🔍 **Live Search** — Type in a search box and the table filters instantly (no page reload!)
+- 📄 **CSV Export** — Click a button and download orders as an Excel file
+- 🎊 **Confetti Animation** — Celebrate when an order succeeds
+
+💡 **Think of it like:** A helper standing next to you who does things immediately without asking the chef.
+
+---
+
+### 🧱 BLOCK 9: Maven (The Builder 🏗️)
+**File:** `pom.xml`, `mvnw.cmd`
+
+**What it is:** A tool that downloads all the parts and builds the project.
+
+**What it does:**
+- 📥 Downloads Spring Boot, Thymeleaf, H2, etc. from the internet
+- 🔗 Connects all the pieces together
+- 📦 Packages everything into a `.jar` file
+- 🏃 Runs the project with `.\mvnw.cmd spring-boot:run`
+
+💡 **Think of it like:** A LEGO instruction manual that finds all the right pieces and puts them together. 📖
+
+---
+
+### 🧱 BLOCK 10: Swagger / OpenAPI (The Documentation 📚)
+**URL:** http://localhost:8081/swagger-ui/index.html
+
+**What it is:** A page that shows ALL the buttons/URLs your app has.
+
+**What you can do there:**
+- 👀 See every URL like `/admin/services`, `/addingProduct`, `/deleteUser/5`
+- 🧪 Test the URLs directly from the browser
+- 📋 See what data each URL needs
+
+💡 **Think of it like:** A map of the entire restaurant showing every door, every room, and what's inside. 🗺️
+
+---
+
+## 👑 Project Features Explained (Like a Story)
+
+### 🌐 SCENE 1: Home Page (`/home`)
+A customer visits your website. They see:
+- A beautiful homepage with gold decorations ✨
+- Navigation bar: Home, Menu, About, Location
+- A button to Login or Register
+
 
 # Or with Docker Compose (includes PostgreSQL)
 docker compose up -d
